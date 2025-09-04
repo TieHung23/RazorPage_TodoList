@@ -27,7 +27,11 @@ namespace Todo.Infrastructure.ImplementServices
 
         public async Task<List<TodoResponse>> GetAllTodoItem()
         {
-            List<TodoResponse> result = (List<TodoResponse>)(await _repository.GetAll()).Select(x => TodoMapper.ConvertToTodoResponse(x));
+            var getResult = await _repository.GetAll();
+
+            if (getResult.Count == 0) return null!;
+
+            List<TodoResponse> result = (List<TodoResponse>)(getResult.Select(x => TodoMapper.ConvertToTodoResponse(x)));
             return result;
         }
 
