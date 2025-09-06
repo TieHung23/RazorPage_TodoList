@@ -9,6 +9,7 @@ namespace Todo.Application.Helpers.TieHungMapper
         {
             return new TodoResponse
             {
+                Id = item.Id,
                 TodoDetail = item.TodoDetail,
                 CreatedAt = item.CreatedAt,
                 FinishedAt = item.FinishedAt,

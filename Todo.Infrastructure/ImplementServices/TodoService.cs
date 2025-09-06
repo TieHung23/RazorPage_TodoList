@@ -29,9 +29,9 @@ namespace Todo.Infrastructure.ImplementServices
         {
             var getResult = await _repository.GetAll();
 
-            if (getResult.Count == 0) return null!;
+            if (getResult.Count == 0) return new List<TodoResponse>();
 
-            List<TodoResponse> result = (List<TodoResponse>)(getResult.Select(x => TodoMapper.ConvertToTodoResponse(x)));
+            var result = getResult.Select(x => TodoMapper.ConvertToTodoResponse(x)).ToList();
             return result;
         }
 

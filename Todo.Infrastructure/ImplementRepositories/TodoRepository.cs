@@ -34,14 +34,16 @@ namespace Todo.Infrastructure.ImplementRepositories
 
         public async Task<TodoItem> Get(Guid id)
         {
-            var result = await _context.TodoItems.FirstOrDefaultAsync(x => x.Id == id && x.IsDeleted != true);
+            var result = await _context.TodoItems
+                .Include(x => x.Status)
+                .FirstOrDefaultAsync(x => x.Id == id && x.IsDeleted != true);
 
             return result!;
         }
 
         public async Task<List<TodoItem>> GetAll()
         {
-            var result = await _context.TodoItems.Where(x => x.IsDeleted != true).ToListAsync();
+            var result = await _context.TodoItems.Include(x => x.Status).Where(x => x.IsDeleted != true).ToListAsync();
 
             return result;
         }

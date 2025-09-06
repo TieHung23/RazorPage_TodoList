@@ -17,6 +17,9 @@ namespace Todo.Infrastructure.AddDependency
             service.AddScoped<ITodoRepository, TodoRepository>();
 
             service.AddScoped<ITodoService, TodoService>();
+
+            service.AddScoped<IStatusRepository, StatusRepository>();
+            service.AddScoped<IStatusService, StatusService>();
         }
     }
 }
