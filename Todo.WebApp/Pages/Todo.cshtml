@@ -1,0 +1,126 @@
+﻿@page
+@model Todo.WebApp.Pages.TodoModel
+@{
+    ViewData["Title"] = "Todo List";
+}
+
+<h2>Todo List</h2>
+
+<!-- Create Todo Form -->
+<form method="post" asp-page-handler="Create" class="mb-4">
+    <div class="row g-2 align-items-end">
+        <div class="col">
+            <input asp-for="NewTodo.TodoDetail" class="form-control" placeholder="Detail" required />
+        </div>
+        <div class="col">
+            <input asp-for="NewTodo.FinishedAt" type="date" class="form-control" required />
+        </div>
+        <div class="col">
+            <select asp-for="NewTodoStatusId" class="form-control" required>
+                <option value="">-- Select Status --</option>
+                @foreach (var status in Model.Statuses)
+                {
+                    <option value="@status.Id">@status.Status</option>
+                }
+            </select>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Add</button>
+        </div>
+    </div>
+</form>
+
+<!-- Todo List Table -->
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Detail</th>
+            <th>Created At</th>
+            <th>Finished At</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Todos != null)
+        {
+            @foreach (var todo in Model.Todos)
+            {
+                <tr>
+                    <td>@todo.TodoDetail</td>
+                    <td>@todo.CreatedAt.ToShortDateString()</td>
+                    <td>@todo.FinishedAt.ToShortDateString()</td>
+                    <td>@todo.Status.Status</td>
+                    <td>
+                        <!-- Edit Button triggers modal -->
+                        <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
+                            data-bs-target="#editModal-@todo.Id">
+                            Edit
+                        </button>
+
+                        <!-- Delete Form -->
+                        <form method="post" asp-page-handler="Delete" style="display:inline;">
+                            <input type="hidden" name="DeleteId" value="@todo.Id" />
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this todo?')">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+
+                <!-- Edit Modal -->
+                <div class="modal fade" id="editModal-@todo.Id" tabindex="-1" aria-labelledby="editModalLabel-@todo.Id"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form method="post" asp-page-handler="Edit">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editModalLabel-@todo.Id">Edit Todo</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="hidden" name="EditTodo.Id" value="@todo.Id" />
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Detail</label>
+                                        <input type="text" class="form-control" name="EditTodo.TodoDetail"
+                                            value="@todo.TodoDetail" required />
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Finished At</label>
+                                        <input type="date" class="form-control" name="EditTodo.FinishedAt"
+                                            value="@todo.FinishedAt.ToString("yyyy-MM-dd")" required />
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Status</label>
+                                        <select class="form-control" name="EditTodoStatusId" required>
+                                            <option value="">-- Select Status --</option>
+                                            @foreach (var status in Model.Statuses)
+                                            {
+                                                @if (status.Id == todo.Status.Id)
+                                                {
+                                                    <option value="@status.Id" selected="selected">@status.Status</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@status.Id">@status.Status</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        }
+    </tbody>
+</table>

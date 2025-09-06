@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Todo.Domain.Models;
+﻿using Todo.Domain.Models;
 
 namespace Todo.Application.DTOs
 {
     public class TodoResponse
     {
+        public Guid Id { get; set; }
+
         public string TodoDetail { get; set; } = string.Empty;
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
